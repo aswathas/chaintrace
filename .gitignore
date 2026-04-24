@@ -1,0 +1,70 @@
+# Secrets
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+env/
+*.so
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+pip-wheel-metadata/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+.cache/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Docker volumes / data dirs
+neo4j/data/
+neo4j/logs/
+redis/data/
+postgres/data/
+ollama/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Misc
+*.bak
+*.tmp
+
+# Graphify internals (keep graph.html, graph.json, GRAPH_REPORT.md, cost.json, manifest.json)
+graphify-out/.graphify_*
+graphify-out/cache/
+graphify-out/obsidian/
+
+# Project-local caches
+backend/tests/.pytest_cache/
+frontend/.eslintcache
+
