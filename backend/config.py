@@ -9,7 +9,13 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    # enable_decoding=False so pydantic-settings does not try to JSON-decode
+    # comma-separated values in env vars; we split via @field_validator below.
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        extra="ignore",
+        enable_decoding=False,
+    )
 
     # AI
     groq_api_key: str = ""
