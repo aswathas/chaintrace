@@ -68,3 +68,4 @@ graphify-out/obsidian/
 backend/tests/.pytest_cache/
 frontend/.eslintcache
 
+*.deb
