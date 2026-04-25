@@ -9,7 +9,7 @@ import { Chain } from '@/lib/types';
 const chains: { value: Chain; label: string }[] = [
   { value: 'eth', label: 'Ethereum' },
   { value: 'polygon', label: 'Polygon' },
-  { value: 'arbitrum', label: 'Arbitrum' },
+  { value: 'arb', label: 'Arbitrum' },
   { value: 'base', label: 'Base' },
   { value: 'bsc', label: 'BNB Chain' },
   { value: 'solana', label: 'Solana' },
@@ -29,7 +29,7 @@ export default function Home() {
     setError('');
     setLoading(true);
     try {
-      const result = await apiClient.startTrace({ input: traceInput, chain: traceChain });
+      const result = await apiClient.startTrace({ seed_address: traceInput, chain: traceChain });
       router.push(`/trace/${result.job_id}`);
     } catch (err) {
       setError(`Failed to start trace: ${String(err)}`);

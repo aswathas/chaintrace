@@ -8,13 +8,18 @@ import {
   Chain,
 } from './types';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
+const BACKEND_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
+// Backend mounts routes under /api/v1 (see backend/main.py); /health stays at root.
+const API_PREFIX = '/api/v1';
+const BACKEND_URL = `${BACKEND_BASE}${API_PREFIX}`;
 
+// Aligned with backend Pydantic models in backend/models/{trace,wallet,alert}.py
 interface TraceRequest {
-  input: string;
+  seed_address: string;
   chain: Chain;
   max_hops?: number;
   min_value_usd?: number;
+  label?: string;
 }
 
 interface ProfileRequest {
@@ -23,10 +28,14 @@ interface ProfileRequest {
 }
 
 interface AlertRuleRequest {
+  rule_id?: string;
   address: string;
-  rule_type: 'address' | 'value' | 'label';
-  rule_value: string;
+  chain: Chain;
   min_value_usd?: number;
+  label_filter?: string;
+  discord_webhook?: string;
+  telegram_chat_id?: string;
+  active?: boolean;
 }
 
 class ApiClient {
@@ -77,10 +86,22 @@ class ApiClient {
     return this.fetch(`/labels/${address}`);
   }
 
-  async createAlert(rule: AlertRuleRequest): Promise<AlertRule> {
+  async createAlert(rule: AlertRuleRequest): Promise<{ rule_id: string }> {
+    // Backend AlertRule requires created_at — fill in client-side.
+    const body = {
+      rule_id: rule.rule_id ?? '',
+      address: rule.address,
+      chain: rule.chain,
+      min_value_usd: rule.min_value_usd ?? 0,
+      label_filter: rule.label_filter ?? null,
+      discord_webhook: rule.discord_webhook ?? null,
+      telegram_chat_id: rule.telegram_chat_id ?? null,
+      created_at: new Date().toISOString(),
+      active: rule.active ?? true,
+    };
     return this.fetch('/monitor', {
       method: 'POST',
-      body: JSON.stringify(rule),
+      body: JSON.stringify(body),
     });
   }
 
@@ -88,20 +109,13 @@ class ApiClient {
     return this.fetch('/monitor/alerts');
   }
 
-  async updateAlert(
-    ruleId: string,
-    enabled: boolean
-  ): Promise<AlertRule> {
-    return this.fetch(`/monitor/${ruleId}`, {
-      method: 'PATCH',
-      body: JSON.stringify({ enabled }),
-    });
+  // Note: backend has no PATCH/DELETE /monitor/{rule_id} routes yet — these are no-ops on the client.
+  async updateAlert(_ruleId: string, _enabled: boolean): Promise<AlertRule> {
+    throw new Error('Update alert: backend route not implemented yet');
   }
 
-  async deleteAlert(ruleId: string): Promise<void> {
-    await this.fetch(`/monitor/${ruleId}`, {
-      method: 'DELETE',
-    });
+  async deleteAlert(_ruleId: string): Promise<void> {
+    throw new Error('Delete alert: backend route not implemented yet');
   }
 
   async generateReport(jobId: string): Promise<ReportData> {
@@ -115,7 +129,10 @@ class ApiClient {
   }
 
   async health(): Promise<{ status: string }> {
-    return this.fetch('/health');
+    // /health is at the root, not under /api/v1.
+    const response = await fetch(`${BACKEND_BASE}/health`);
+    if (!response.ok) throw new Error(`API error: ${response.status}`);
+    return response.json();
   }
 }
 

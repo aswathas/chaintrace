@@ -9,7 +9,8 @@ export function streamTrace(
   onError?: ErrorCallback
 ): () => void {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
-  const wsUrl = backendUrl.replace('http', 'ws') + `/trace/${jobId}/stream`;
+  // Backend WebSocket lives under /api/v1, same as REST routes.
+  const wsUrl = backendUrl.replace('http', 'ws') + `/api/v1/trace/${jobId}/stream`;
 
   let ws: WebSocket | null = null;
   let reconnectAttempts = 0;

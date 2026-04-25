@@ -70,7 +70,7 @@ export function chainLabel(chain: string): string {
   const labels: Record<string, string> = {
     eth: 'Ethereum',
     polygon: 'Polygon',
-    arbitrum: 'Arbitrum',
+    arb: 'Arbitrum',
     base: 'Base',
     bsc: 'BNB Chain',
     solana: 'Solana',
@@ -82,7 +82,7 @@ export function chainColor(chain: string): string {
   const colors: Record<string, string> = {
     eth: 'bg-blue-600',
     polygon: 'bg-purple-600',
-    arbitrum: 'bg-blue-500',
+    arb: 'bg-blue-500',
     base: 'bg-sky-600',
     bsc: 'bg-yellow-600',
     solana: 'bg-green-600',

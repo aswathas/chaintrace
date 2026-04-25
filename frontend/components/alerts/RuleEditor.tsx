@@ -62,7 +62,7 @@ export function RuleEditor({ onSubmit, isLoading = false }: RuleEditorProps) {
         >
           <option value="eth">Ethereum</option>
           <option value="polygon">Polygon</option>
-          <option value="arbitrum">Arbitrum</option>
+          <option value="arb">Arbitrum</option>
           <option value="base">Base</option>
           <option value="bsc">BNB Chain</option>
           <option value="solana">Solana</option>

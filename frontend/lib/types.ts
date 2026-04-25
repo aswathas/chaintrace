@@ -1,4 +1,5 @@
-export type Chain = 'eth' | 'polygon' | 'arbitrum' | 'base' | 'bsc' | 'solana';
+// Backend uses `arb` (not `arbitrum`) — see backend/models/wallet.py:Chain
+export type Chain = 'eth' | 'polygon' | 'arb' | 'base' | 'bsc' | 'solana';
 
 export interface TraceNode {
   address: string;
